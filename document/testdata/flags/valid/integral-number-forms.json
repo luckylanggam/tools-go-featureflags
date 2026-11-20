@@ -1,0 +1,23 @@
+{
+  "schema_version": 1.0,
+  "flags": {
+    "x": {
+      "owner": "marco",
+      "jira": "PHOENIX-900",
+      "remove_after": "2027-03-01",
+      "enabled": true,
+      "default": false,
+      "rules": [
+        {
+          "name": "r",
+          "if": [],
+          "then": true,
+          "rollout": {
+            "percentage": 1e1,
+            "bucket_by": "network_id"
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "operators": {
+    "is_vip": {
+      "value_type": "boolean",
+      "description": "Registered in code"
+    }
+  },
+  "resolvers": {
+    "network_id": {
+      "requires": [
+        "player_id"
+      ],
+      "description": "Looks up the player's network"
+    }
+  }
+}

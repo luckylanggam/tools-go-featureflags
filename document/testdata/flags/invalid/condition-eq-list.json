@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "flags": {
+    "x": {
+      "owner": "marco",
+      "jira": "PHOENIX-900",
+      "remove_after": "2027-03-01",
+      "enabled": true,
+      "default": false,
+      "rules": [
+        {
+          "name": "r",
+          "if": [
+            {
+              "attr": "network_id",
+              "op": "eq",
+              "value": [
+                "N-1"
+              ]
+            }
+          ],
+          "then": true
+        }
+      ]
+    }
+  }
+}

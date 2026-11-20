@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "attributes": {
+    "network_id": {
+      "type": "string",
+      "description": "Betable network"
+    },
+    "player_id": {
+      "type": "string"
+    },
+    "player_age_days": {
+      "type": "integer"
+    },
+    "stake": {
+      "type": "number"
+    },
+    "is_staff": {
+      "type": "boolean"
+    }
+  },
+  "operators": {
+    "is_vip": {
+      "value_type": "boolean",
+      "description": "Registered in code"
+    }
+  },
+  "resolvers": {
+    "network_id": {
+      "requires": [
+        "player_id",
+        "player_id"
+      ],
+      "description": "Looks up the player's network"
+    }
+  }
+}

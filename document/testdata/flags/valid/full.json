@@ -1,0 +1,287 @@
+{
+  "schema_version": 1,
+  "groups": {
+    "staff": {
+      "attr": "player_id",
+      "description": "Internal staff",
+      "values": [
+        "p-1",
+        "p-2"
+      ]
+    },
+    "canary-networks": {
+      "attr": "network_id",
+      "values": [
+        101,
+        102
+      ]
+    }
+  },
+  "flags": {
+    "every_operator": {
+      "owner": "marco",
+      "jira": "PHOENIX-900",
+      "remove_after": "2027-03-01",
+      "enabled": true,
+      "default": false,
+      "description": "One rule per operator",
+      "rules": [
+        {
+          "name": "eq",
+          "if": [
+            {
+              "attr": "player_id",
+              "op": "eq",
+              "value": "S-1"
+            }
+          ],
+          "then": true
+        },
+        {
+          "name": "not_eq",
+          "if": [
+            {
+              "attr": "player_id",
+              "op": "not_eq",
+              "value": "S-2"
+            }
+          ],
+          "then": true
+        },
+        {
+          "name": "in",
+          "if": [
+            {
+              "attr": "player_id",
+              "op": "in",
+              "value": [
+                "S-1",
+                "S-2"
+              ]
+            }
+          ],
+          "then": true
+        },
+        {
+          "name": "not_in",
+          "if": [
+            {
+              "attr": "player_id",
+              "op": "not_in",
+              "value": [
+                1,
+                2
+              ]
+            }
+          ],
+          "then": true
+        },
+        {
+          "name": "in_group",
+          "if": [
+            {
+              "attr": "player_id",
+              "op": "in_group",
+              "value": "staff"
+            }
+          ],
+          "then": true
+        },
+        {
+          "name": "not_in_group",
+          "if": [
+            {
+              "attr": "player_id",
+              "op": "not_in_group",
+              "value": "staff"
+            }
+          ],
+          "then": true
+        },
+        {
+          "name": "gt",
+          "if": [
+            {
+              "attr": "player_id",
+              "op": "gt",
+              "value": 18
+            }
+          ],
+          "then": true
+        },
+        {
+          "name": "not_gt",
+          "if": [
+            {
+              "attr": "player_id",
+              "op": "not_gt",
+              "value": 65
+            }
+          ],
+          "then": true
+        },
+        {
+          "name": "lt",
+          "if": [
+            {
+              "attr": "player_id",
+              "op": "lt",
+              "value": 100.5
+            }
+          ],
+          "then": true
+        },
+        {
+          "name": "not_lt",
+          "if": [
+            {
+              "attr": "player_id",
+              "op": "not_lt",
+              "value": 0
+            }
+          ],
+          "then": true
+        },
+        {
+          "name": "starts_with",
+          "if": [
+            {
+              "attr": "player_id",
+              "op": "starts_with",
+              "value": "GB"
+            }
+          ],
+          "then": true
+        },
+        {
+          "name": "not_starts_with",
+          "if": [
+            {
+              "attr": "player_id",
+              "op": "not_starts_with",
+              "value": "US"
+            }
+          ],
+          "then": true
+        },
+        {
+          "name": "matches",
+          "if": [
+            {
+              "attr": "player_id",
+              "op": "matches",
+              "value": "^qa-"
+            }
+          ],
+          "then": true
+        },
+        {
+          "name": "not_matches",
+          "if": [
+            {
+              "attr": "player_id",
+              "op": "not_matches",
+              "value": "^bot-"
+            }
+          ],
+          "then": true
+        },
+        {
+          "name": "contains",
+          "if": [
+            {
+              "attr": "player_id",
+              "op": "contains",
+              "value": "beta"
+            }
+          ],
+          "then": true
+        },
+        {
+          "name": "not_contains",
+          "if": [
+            {
+              "attr": "player_id",
+              "op": "not_contains",
+              "value": "test"
+            }
+          ],
+          "then": true
+        },
+        {
+          "name": "exists",
+          "if": [
+            {
+              "attr": "player_id",
+              "op": "exists"
+            }
+          ],
+          "then": true
+        },
+        {
+          "name": "not_exists",
+          "if": [
+            {
+              "attr": "player_id",
+              "op": "not_exists"
+            }
+          ],
+          "then": true
+        },
+        {
+          "name": "is_vip",
+          "if": [
+            {
+              "attr": "player_id",
+              "op": "is_vip",
+              "value": true
+            }
+          ],
+          "then": true
+        }
+      ]
+    },
+    "group_rollout": {
+      "owner": "marco",
+      "jira": "PHOENIX-900",
+      "remove_after": "2027-03-01",
+      "enabled": true,
+      "default": false,
+      "rules": [
+        {
+          "name": "20% of canary",
+          "if": [
+            {
+              "attr": "network_id",
+              "op": "in_group",
+              "value": "canary-networks"
+            },
+            {
+              "attr": "site_id",
+              "op": "exists"
+            }
+          ],
+          "then": true,
+          "rollout": {
+            "percentage": 20,
+            "bucket_by": "network_id"
+          }
+        }
+      ]
+    },
+    "kill_switched": {
+      "owner": "marco",
+      "jira": "PHOENIX-900",
+      "remove_after": "2027-03-01",
+      "enabled": false,
+      "default": true
+    },
+    "no_rules": {
+      "owner": "marco",
+      "jira": "PHOENIX-900",
+      "remove_after": "2027-03-01",
+      "enabled": true,
+      "default": true
+    }
+  }
+}

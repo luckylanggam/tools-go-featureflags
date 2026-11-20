@@ -1,0 +1,112 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "feature-flags document, schema_version 1",
+  "description": "Flags and groups of one project, one AppConfig hosted version. Shape only: cross-references (groups, catalog attributes and operators, value types) are checked by Validate.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "flags"],
+  "properties": {
+    "schema_version": { "enum": [1] },
+    "groups": {
+      "type": "object",
+      "additionalProperties": false,
+      "patternProperties": {
+        "^[a-z0-9][a-z0-9-]{0,63}$": { "$ref": "#/definitions/group" }
+      }
+    },
+    "flags": {
+      "type": "object",
+      "additionalProperties": false,
+      "patternProperties": {
+        "^[a-z][a-z0-9_]{0,63}$": { "$ref": "#/definitions/flag" }
+      }
+    }
+  },
+  "definitions": {
+    "attr": { "type": "string", "pattern": "^[a-z][a-z0-9_]{0,63}$" },
+    "scalar": { "type": ["string", "number", "boolean"] },
+    "group": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["attr", "values"],
+      "properties": {
+        "attr": { "$ref": "#/definitions/attr" },
+        "description": { "type": "string" },
+        "values": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 200,
+          "uniqueItems": true,
+          "items": { "type": ["string", "number"] }
+        }
+      }
+    },
+    "flag": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["owner", "jira", "remove_after", "enabled", "default"],
+      "properties": {
+        "description": { "type": "string" },
+        "owner": { "type": "string", "minLength": 1 },
+        "jira": { "type": "string", "pattern": "^[A-Z][A-Z0-9]+-[0-9]+$" },
+        "remove_after": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$"
+        },
+        "enabled": { "type": "boolean" },
+        "rules": { "type": "array", "items": { "$ref": "#/definitions/rule" } },
+        "default": { "type": "boolean" }
+      }
+    },
+    "rule": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "if", "then"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1, "maxLength": 100 },
+        "if": { "type": "array", "items": { "$ref": "#/definitions/condition" } },
+        "then": { "type": "boolean" },
+        "rollout": { "$ref": "#/definitions/rollout" }
+      }
+    },
+    "rollout": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["percentage", "bucket_by"],
+      "properties": {
+        "percentage": { "type": "integer", "minimum": 0, "maximum": 100 },
+        "bucket_by": { "$ref": "#/definitions/attr" }
+      }
+    },
+    "condition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["attr", "op"],
+      "properties": {
+        "attr": { "$ref": "#/definitions/attr" },
+        "op": { "type": "string", "pattern": "^[a-z][a-z0-9_]{0,63}$" },
+        "value": {}
+      },
+      "oneOf": [
+        {
+          "properties": { "op": { "enum": ["exists", "not_exists"] } },
+          "not": { "required": ["value"] }
+        },
+        {
+          "required": ["value"],
+          "properties": {
+            "op": { "enum": ["in", "not_in"] },
+            "value": { "type": "array", "minItems": 1, "items": { "$ref": "#/definitions/scalar" } }
+          }
+        },
+        {
+          "required": ["value"],
+          "properties": {
+            "op": { "not": { "enum": ["exists", "not_exists", "in", "not_in"] } },
+            "value": { "$ref": "#/definitions/scalar" }
+          }
+        }
+      ]
+    }
+  }
+}

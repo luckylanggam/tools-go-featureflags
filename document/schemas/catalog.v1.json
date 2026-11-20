@@ -1,0 +1,86 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "catalog document, schema_version 1",
+  "description": "Attributes, custom operators and resolvers a project declares in config/featureflags/catalog.json. Shape only: references between them and to live flags are checked by Validate.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "attributes"],
+  "properties": {
+    "schema_version": { "enum": [1] },
+    "attributes": {
+      "type": "object",
+      "additionalProperties": false,
+      "patternProperties": {
+        "^[a-z][a-z0-9_]{0,63}$": { "$ref": "#/definitions/attribute" }
+      }
+    },
+    "operators": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "eq": { "not": {} },
+        "not_eq": { "not": {} },
+        "in": { "not": {} },
+        "not_in": { "not": {} },
+        "in_group": { "not": {} },
+        "not_in_group": { "not": {} },
+        "gt": { "not": {} },
+        "not_gt": { "not": {} },
+        "lt": { "not": {} },
+        "not_lt": { "not": {} },
+        "starts_with": { "not": {} },
+        "not_starts_with": { "not": {} },
+        "matches": { "not": {} },
+        "not_matches": { "not": {} },
+        "contains": { "not": {} },
+        "not_contains": { "not": {} },
+        "exists": { "not": {} },
+        "not_exists": { "not": {} }
+      },
+      "patternProperties": {
+        "^[a-z][a-z0-9_]{0,63}$": { "$ref": "#/definitions/operator" }
+      }
+    },
+    "resolvers": {
+      "type": "object",
+      "additionalProperties": false,
+      "patternProperties": {
+        "^[a-z][a-z0-9_]{0,63}$": { "$ref": "#/definitions/resolver" }
+      }
+    }
+  },
+  "definitions": {
+    "attr": { "type": "string", "pattern": "^[a-z][a-z0-9_]{0,63}$" },
+    "type": { "enum": ["string", "integer", "number", "boolean"] },
+    "attribute": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type"],
+      "properties": {
+        "type": { "$ref": "#/definitions/type" },
+        "description": { "type": "string" }
+      }
+    },
+    "operator": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["value_type"],
+      "properties": {
+        "value_type": { "$ref": "#/definitions/type" },
+        "description": { "type": "string" }
+      }
+    },
+    "resolver": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "requires": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "#/definitions/attr" }
+        },
+        "description": { "type": "string" }
+      }
+    }
+  }
+}

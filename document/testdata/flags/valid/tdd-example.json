@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "groups": {
+    "canary-1": {
+      "attr": "network_id",
+      "values": [
+        "N-1",
+        "N-2"
+      ]
+    }
+  },
+  "flags": {
+    "new_withdraw_flow": {
+      "owner": "marco",
+      "jira": "PHOENIX-900",
+      "remove_after": "2027-03-01",
+      "enabled": true,
+      "default": false,
+      "rules": [
+        {
+          "name": "canary",
+          "if": [
+            {
+              "attr": "network_id",
+              "op": "in_group",
+              "value": "canary-1"
+            }
+          ],
+          "then": true
+        },
+        {
+          "name": "10% rollout",
+          "if": [],
+          "then": true,
+          "rollout": {
+            "percentage": 10,
+            "bucket_by": "network_id"
+          }
+        }
+      ]
+    }
+  }
+}
